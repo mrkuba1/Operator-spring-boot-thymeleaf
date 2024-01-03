@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>List offers</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+<div>
+    <nav class="nav-custom">
+        <a th:inline="text">User:
+            <b style="text-transform: capitalize">[[${#httpServletRequest.remoteUser}]]</b>
+        </a>
+        <a th:href="@{/index}">Home</a>
+        <a th:href="@{'/'+${role}+'/operators/'}">Operators</a>
+        <a th:href="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/departments'}">Departments</a>
+        <a th:href="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/employees'}">Employees</a>
+        <a th:href="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/senders'}">Senders</a>
+        <a th:href="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/customers'}">Customers</a>
+        <a th:href="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/offers'}">Services</a>
+        <a th:href="@{/logout}" onclick="submitLogoutForm()">Logout</a>
+        <div class="animation start-home"></div>
+    </nav>
+</div>
+<div class="container">
+    <div><h1>List offers for operator: <span th:text="${operator.toStringShort()}"></span></h1></div>
+</div>
+<div class="container">
+    <div>
+        <a th:href="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/offer/new/'}"
+            class="btn btn-success"><i class="fa fa-plus"></i> Add offers</a>
+    </div>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr> <!-- Table row -->
+            <th>ID</th>
+            <!–- Table column -->
+            <th>Name</th>
+            <th>Type</th>
+            <th>Include device</th>
+            <th>Value</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <!-- Table body -->
+        <tbody>
+        <tr th:each="offer : ${offers}">
+            <td th:text="${offer.offerId}">ID</td>
+            <td th:text="${offer.name}">Name</td>
+            <td th:text="${offer.type}">Type</td>
+            <td th:text="${offer.device=='T' ? 'YES' : 'NO'}">Device</td>
+            <td th:text="${offer.value}">Value</td>
+            <td class="col-actions">
+                <a th:href="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/offer/'+${offer.offerId}}"
+                   class="btn btn-default"><i
+                        class="fa fa-plus"></i> More info</a>
+                <a th:href="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/offer/edit/'+${offer.offerId}}"
+
+                   class="btn btn-primary"><i
+                        class="fa fa-edit"></i>
+                    Edit</a>
+                <a th:href="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/offer/delete/'+${offer.offerId}}"
+                   onclick="return confirm('Are you sure you want to delete operator? This will delete all linked tables');"
+                   class="btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+<th:block th:include="fragments/footer :: footer"></th:block>
+</html>

@@ -1,0 +1,55 @@
+<header th:fragment="header(operatorId)">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Zarządzanie operatorami telekomunikacyjnymi</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item" th:class="${#httpServletRequest.requestURI == '/index' ? 'active' : ''}">
+                        <a class="nav-link" th:href="@{/index}">Home</a>
+                    </li>
+                    <li class="nav-item" th:classappend="${#request.requestURI.startsWith('/operators') ? 'active' : ''}">
+                        <a class="nav-link" th:href="@{/operators}">Operators</a>
+                    </li>
+                    <li class="nav-item" th:classappend="${#request.requestURI.startsWith('/operators/' + ${operator.operatorId} + '/departments') ? 'active' : ''}">
+                        <a class="nav-link" th:href="@{'/operators/'+${operatorId}+'/departments/'}">Departments</a>
+                    </li>
+                    <li class="nav-item" th:classappend="${#request.requestURI.startsWith('/operators/' + ${operator.operatorId} + '/employees') ? 'active' : ''}">
+                        <a class="nav-link" th:href="@{'/operators/'+${operatorid}+'/employees/'}">Employees</a>
+                    </li>
+                    <li class="nav-item" th:classappend="${#request.requestURI.startsWith('/operators/' + ${operator.operatorId} + '/senders') ? 'active' : ''}">
+                        <a class="nav-link" th:href="@{'/operators/'+${operatorId}+'/senders/'}">Senders</a>
+                    </li>
+                    <li class="nav-item" th:classappend="${#request.requestURI.startsWith('/operators/' + ${operator.operatorId} + '/customers') ? 'active' : ''}">
+                        <a class="nav-link" th:href="@{'/operators/'+${operatorId}+'/customers/'}">Customers</a>
+                    </li>
+                    <li class="nav-item" th:classappend="${#request.requestURI.startsWith('/operators/' + ${operator.operatorId} + '/offers') ? 'active' : ''}">
+                        <a class="nav-link" th:href="@{'/operators/'+${operatorId}+'/offers/'}">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:inline="text" style="color: lightskyblue;">
+                            You are logged in as <b
+                                style="text-transform: capitalize">[[${#httpServletRequest.remoteUser}]]</b>
+                        </a>
+                    </li>
+                    <form id="logoutForm" th:action="@{/logout}" method="post">
+                        <a href="#" onclick="submitLogoutForm()" class="nav-link">Logout</a>
+                    </form>
+                    <script th:inline="javascript">
+                        function submitLogoutForm() {
+                            if (confirm('Are you sure you want to log out?')) {
+                                document.getElementById('logoutForm').submit();
+                            }
+                            return false;
+                        }
+                    </script>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee info</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+<div th:if="${role == 'admin'}">
+    <nav class="nav-custom">
+        <a th:inline="text">User:
+            <b style="text-transform: capitalize">[[${#httpServletRequest.remoteUser}]]</b>
+        </a>
+        <a th:href="@{/index}">Home</a>
+        <a th:href="@{'/'+${role}+'/operators'}">Operators</a>
+        <a th:href="@{'/'+${role}+'/departments'}">Departments</a>
+        <a th:href="@{'/'+${role}+'/employees'}">Employees</a>
+        <a th:href="@{'/'+${role}+'/senders'}">Senders</a>
+        <a th:href="@{'/'+${role}+'/customers'}">Customers</a>
+        <a th:href="@{'/'+${role}+'/offers'}">Services</a>
+        <a th:href="@{/logout}" onclick="submitLogoutForm()">Logout</a>
+        <div class="animation start-home"></div>
+    </nav>
+</div>
+<div th:unless="${role == 'admin'}">
+    <nav class="nav-custom-2">
+        <a th:inline="text">User:
+            <b style="text-transform: capitalize">[[${#httpServletRequest.remoteUser}]]</b>
+        </a>
+        <a th:href="@{/index}">Home</a>
+        <a th:href="@{'/'+${role}+'/operators'}">Operators</a>
+        <a th:href="@{'/'+${role}+'/departments'}" sec:authorize="hasAuthority('ADMIN')">Departments</a>
+        <a th:href="@{'/'+${role}+'/employees'}" sec:authorize="hasAuthority('ADMIN')">Employees</a>
+        <a th:href="@{'/'+${role}+'/senders'}" sec:authorize="hasAuthority('ADMIN')">Senders</a>
+        <a th:href="@{'/'+${role}+'/customers'}" sec:authorize="hasAuthority('ADMIN')">Customers</a>
+        <a th:href="@{'/'+${role}+'/offers'}" sec:authorize="hasAuthority('ADMIN')">Services</a>
+        <a th:href="@{/logout}" onclick="submitLogoutForm()">Logout</a>
+        <div class="animation start-home"></div>
+    </nav>
+</div>
+    <div class="container">
+        <div><h1>Employee info</h1></div>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>Type</th>
+                <th>Data</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>ID employee:</td>
+                <td th:text="${employee.employeeId}">ID</td>
+            </tr>
+            <tr>
+                <td>Name:</td>
+                <td th:text="${employee.name}">Name</td>
+            </tr>
+            <tr>
+                <td>Surname:</td>
+                <td th:text="${employee.surname}">Surname</td>
+            </tr>
+            <tr>
+                <td>Gender:</td>
+                <td th:text="${employee.gender}">Gender</td>
+            </tr>
+            <tr>
+                <td>PESEL Number:</td>
+                <td th:text="${employee.peselNumber}">PESEL</td>
+            </tr>
+            <tr>
+                <td>Date of employment:</td>
+                <td th:text="${employee.getFormattedDateOfEmployment()}">Date of employment</td>
+            </tr>
+            <tr>
+                <td>Date of dismissal:</td>
+                <td th:text="${employee.getFormattedDateOfDismissal()}">Date of dismissal</td>
+            </tr>
+            <tr>
+                <td>Operator:</td>
+                <td th:text="${employee.operator.toStringShort()}">Operator</td>
+            </tr>
+            <tr>
+                <td>Department:</td>
+                <td th:text="${employee.department.name}">Department</td>
+            </tr>
+            </tbody>
+        </table>
+        <div>Senders:</div>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+            <tr> <!-- Table row -->
+                <th>ID</th>
+                <th>Location</th>
+                <th>Height</th>
+                <th>Bandwidth</th>
+                <th>Works</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="sender : ${employee.senders}">
+                <td th:text="${sender.senderId}">ID</td>
+                <td th:text="${sender.location}">Location</td>
+                <td th:text="${sender.height}">Height</td>
+                <td th:text="${sender.bandwidth}">Bandwidth</td>
+                <td th:text="${sender.works == 'T' ? 'Yes' : 'No'}">Works</td>
+            </tr>
+            </tbody>
+        </table>
+    <div class="text-center">
+        <a th:href="@{'/'+${role}+'/employee/edit/'+${employee.employeeId}}" sec:authorize="hasAuthority('ADMIN')"
+           class="btn btn-primary"><i class="fa fa-edit"></i>
+            Edit</a>
+        <a th:href="@{'/'+${role}+'/employee/delete/'+${employee.employeeId}}" sec:authorize="hasAuthority('ADMIN')"
+           onclick="return confirm('Are you sure you want to delete operator? This will delete all linked tables');"
+           class="btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+    </div>
+</div>
+</body>
+<footer>
+    <th:block th:include="fragments/footer :: footer"></th:block>
+</footer>
+
+</html>

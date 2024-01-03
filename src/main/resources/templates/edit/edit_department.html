@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit department</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/add.css}"/>
+</head>
+<body>
+<div>
+    <div class="form-title" th:if="${department.departmentId==null}">Create new department</div>
+    <div class="form-title" th:unless="${department.departmentId==null}">Edit department</div>
+    <form th:action="@{'/'+${role}+'/department/update'}" th:object="${department}" method="post">
+        <input type="hidden" th:field="*{departmentId}" th:value="${department.departmentId}">
+        <div>
+            <div>
+                <label>Name:</label>
+                <input type="text" th:field="*{name}" required maxlength="20"
+                       title="Enter the department's name (up to 20 characters)"/>
+            </div>
+            <div>
+                <label>Phone:</label>
+                <input type="tel" th:field="*{phoneNumber}" required title="Enter a valid phone number"/>
+            </div>
+            <div>
+                <label>Operator:
+                    <select th:field="*{operator}" class="form-control" required>
+                        <th:block th:each="operator:${operators}">
+                            <option th:text="${operator.name}" th:value="${operator.operatorId}"/>
+                        </th:block>
+                    </select>
+                </label>
+            </div>
+            <button type="submit" class="button">
+                <i class="fas fa-sync"></i> Update
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

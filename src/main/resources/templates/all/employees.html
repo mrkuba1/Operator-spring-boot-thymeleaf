@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>List employees</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+<body>
+<div th:if="${role == 'admin'}">
+    <nav class="nav-custom">
+        <a th:inline="text">User:
+            <b style="text-transform: capitalize">[[${#httpServletRequest.remoteUser}]]</b>
+        </a>
+        <a th:href="@{/index}">Home</a>
+        <a th:href="@{'/'+${role}+'/operators'}">Operators</a>
+        <a th:href="@{'/'+${role}+'/departments'}">Departments</a>
+        <a th:href="@{'/'+${role}+'/employees'}">Employees</a>
+        <a th:href="@{'/'+${role}+'/senders'}">Senders</a>
+        <a th:href="@{'/'+${role}+'/customers'}">Customers</a>
+        <a th:href="@{'/'+${role}+'/offers'}">Services</a>
+        <a th:href="@{/logout}" onclick="submitLogoutForm()">Logout</a>
+        <div class="animation start-home"></div>
+    </nav>
+</div>
+<div th:unless="${role == 'admin'}">
+    <nav class="nav-custom-2">
+        <a th:inline="text">User:
+            <b style="text-transform: capitalize">[[${#httpServletRequest.remoteUser}]]</b>
+        </a>
+        <a th:href="@{/index}">Home</a>
+        <a th:href="@{'/'+${role}+'/operators'}">Operators</a>
+        <a th:href="@{'/'+${role}+'/departments'}" sec:authorize="hasAuthority('ADMIN')">Departments</a>
+        <a th:href="@{'/'+${role}+'/employees'}" sec:authorize="hasAuthority('ADMIN')">Employees</a>
+        <a th:href="@{'/'+${role}+'/senders'}" sec:authorize="hasAuthority('ADMIN')">Senders</a>
+        <a th:href="@{'/'+${role}+'/customers'}" sec:authorize="hasAuthority('ADMIN')">Customers</a>
+        <a th:href="@{'/'+${role}+'/offers'}" sec:authorize="hasAuthority('ADMIN')">Services</a>
+        <a th:href="@{/logout}" onclick="submitLogoutForm()">Logout</a>
+        <div class="animation start-home"></div>
+    </nav>
+</div>
+<div class="container">
+    <div>
+        <a th:href="@{'/'+${role}+'/employee/new'}" class="btn btn-success" sec:authorize="hasAuthority('ADMIN')"><i
+                class="fa fa-plus"></i> Add Employee</a>
+    </div>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Gender</th>
+            <th>PESEL</th>
+            <th>Date of employment</th>
+            <th>Date of dismissal</th>
+            <th>Operator</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employee : ${employees}">
+            <td th:text="${employee.employeeId}">ID</td>
+            <td th:text="${employee.name}">Name</td>
+            <td th:text="${employee.surname}">Surname</td>
+            <td th:text="${employee.gender=='K' ? 'Woman' : 'Man'}">Gender</td>
+            <td th:text="${employee.peselNumber}">Name</td>
+            <td th:text="${employee.getFormattedDateOfEmployment()}">DateOfEmployment</td>
+            <td th:text="${employee.getFormattedDateOfDismissal()}">DateOfDismissal</td>
+            <td th:text="${employee.operator.toStringShort()}">Operator</td>
+            <td class="col-actions">
+                <a th:href="@{'/'+${role}+'/employees/'+${employee.employeeId}}" class="btn btn-default"><i
+                        class="fa fa-plus"></i> More info</a>
+                <a th:href="@{'/'+${role}+'/employee/edit/'+${employee.employeeId}}"
+                   sec:authorize="hasAuthority('ADMIN')" class="btn btn-primary"><i
+                        class="fa fa-edit"></i>
+                    Edit</a>
+                <a th:href="@{'/'+${role}+'/employee/delete/'+${employee.employeeId}}"
+                   sec:authorize="hasAuthority('ADMIN')"
+                   onclick="return confirm('Are you sure you want to delete operator? This will delete all linked tables');"
+                   class="btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+<th:block th:include="fragments/footer :: footer"></th:block>
+</html>

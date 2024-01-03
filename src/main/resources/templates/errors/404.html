@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Error Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+<div th:if="${role == 'admin'}">
+    <nav class="nav-custom">
+        <a th:inline="text">User:
+            <b style="text-transform: capitalize">[[${#httpServletRequest.remoteUser}]]</b>
+        </a>
+        <a th:href="@{/index}">Home</a>
+        <a th:href="@{'/'+${role}+'/operators'}">Operators</a>
+        <a th:href="@{'/'+${role}+'/departments'}">Departments</a>
+        <a th:href="@{'/'+${role}+'/employees'}">Employees</a>
+        <a th:href="@{'/'+${role}+'/senders'}">Senders</a>
+        <a th:href="@{'/'+${role}+'/customers'}">Customers</a>
+        <a th:href="@{'/'+${role}+'/offers'}">Services</a>
+        <a th:href="@{/logout}" onclick="submitLogoutForm()">Logout</a>
+        <div class="animation start-home"></div>
+    </nav>
+</div>
+<div th:unless="${role == 'admin'}">
+    <nav class="nav-custom-2">
+        <a th:inline="text">User:
+            <b style="text-transform: capitalize">[[${#httpServletRequest.remoteUser}]]</b>
+        </a>
+        <a th:href="@{/index}">Home</a>
+        <a th:href="@{'/'+${role}+'/operators'}">Operators</a>
+        <a th:href="@{'/'+${role}+'/departments'}" sec:authorize="hasAuthority('ADMIN')">Departments</a>
+        <a th:href="@{'/'+${role}+'/employees'}" sec:authorize="hasAuthority('ADMIN')">Employees</a>
+        <a th:href="@{'/'+${role}+'/senders'}" sec:authorize="hasAuthority('ADMIN')">Senders</a>
+        <a th:href="@{'/'+${role}+'/customers'}" sec:authorize="hasAuthority('ADMIN')">Customers</a>
+        <a th:href="@{'/'+${role}+'/offers'}" sec:authorize="hasAuthority('ADMIN')">Services</a>
+        <a th:href="@{/logout}" onclick="submitLogoutForm()">Logout</a>
+        <div class="animation start-home"></div>
+    </nav>
+</div>
+<div class="container">
+    <div>
+        <form method="get" th:action="@{/index}">
+            <div class="form-group">
+                <div><b><p style="font-size:30px">Error</p></b></div>
+                <div><p style="font-size:24px">404 - Page not found</p></div>
+            </div>
+            <button class="btn btn-primary" type="submit" value="Sign In">Back to home page</button>
+        </form>
+    </div>
+</div>
+</body>
+<footer>
+    <th:block th:include="fragments/footer :: footer"></th:block>
+</footer>
+</html>
+
