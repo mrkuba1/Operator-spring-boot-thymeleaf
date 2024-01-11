@@ -6,33 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/add.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/form/customer.css}"/>
+    <script type="text/javascript" th:src="@{/js/validation/customerform.js}"></script>
 </head>
 <body>
 <div>
     <div class="form-title" th:if="${customer.customerId==null}">Create new customer</div>
     <div class="form-title" th:unless="${customer.customerId==null}">Edit customer</div>
-    <form th:action="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/customer/update'}" th:object="${customer}" method="post">
+    <form th:action="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/customer/update'}" th:object="${customer}"
+          method="post" id="customerForm">
         <input type="hidden" th:field="*{customerId}" th:value="${customer.customerId}">
         <div>
             <div>
                 <label>Name:</label>
-                <input type="text" th:field="*{name}" required maxlength="30"
-                       title="Enter the operator's name (up to 30 characters)"/>
+                <input type="text" th:field="*{name}" oninput="validateCustomerName(this)" required maxlength="30"
+                       placeholder="Enter the customer's name (up to 30 characters)"/>
             </div>
             <div>
                 <label>Surname:</label>
-                <input type="text" th:field="*{surname}" required maxlength="30"
-                       title="Enter the customer's name (up to 30 characters)"/>
+                <input type="text" th:field="*{surname}" oninput="validateCustomerSurname(this)" required maxlength="30"
+                       placeholder="Enter the customer's surname (up to 30 characters)"/>
             </div>
             <div>
                 <label>Phone:</label>
-                <input type="tel" th:field="*{phoneNumber}" required title="Enter a valid phone number"/>
+                <input type="tel" th:field="*{phoneNumber}" oninput="validateCustomerPhoneNumber(this)" required
+                       placeholder="Enter a valid phone number"/>
             </div>
             <div th:if="${role=='ADMIN'}">
                 <label>
                     <select th:field="*{operator}" class="form-control" required>
-                        <!--                        <option value="">Please select</option> &lt;!&ndash; Empty option &ndash;&gt;-->
                         <option th:each="operator : ${operators}" th:value="${operator.operatorId}"
                                 th:text="${operator.name}"></option>
                     </select>
@@ -41,7 +43,7 @@
             <div th:unless="${role=='ADMIN'}">
                 <input type="hidden" th:field="*{operator}" th:value="${customer.operator.operatorId}">
             </div>
-            <button type="submit" class="button">
+            <button type="button" class="button" onclick="validateCustomerForm()">
                 <i class="fas fa-sync"></i> Update
             </button>
         </div>

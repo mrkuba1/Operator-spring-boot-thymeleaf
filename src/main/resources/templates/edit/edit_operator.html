@@ -6,39 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/add.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/form/operator.css}"/>
+    <script type="text/javascript" th:src="@{/js/validation/operatorform.js}"></script>
 </head>
 <body>
 <div>
     <div class="form-title" th:if="${operator.operatorId==null}">Create new operator</div>
     <div class="form-title" th:unless="${operator.operatorId==null}">Edit operator</div>
-    <form th:action="@{'/'+${role}+'/operator/update'}" th:object="${operator}" method="post">
+    <form th:action="@{'/'+${role}+'/operator/update'}" th:object="${operator}" method="post" id="operatorForm">
         <input type="hidden" th:field="*{operatorId}" th:value="${operator.operatorId}">
         <div>
             <div>
                 <label>Operator Name:</label>
-                <input type="text" th:field="*{name}" required maxlength="30"
-                       title="Enter the operator's name (up to 30 characters)"/>
+                <input type="text" th:field="*{name}" oninput="validateOperatorName(this)" required maxlength="30"
+                       placeholder="Enter the operator's name (up to 30 characters)"/>
             </div>
             <div>
                 <label>NIP:</label>
-                <input type="number" th:field="*{nipNumber}" required pattern=".{10}" maxlength="10"
-                       title="Enter the NIP with exactly 10 digits"/>
+                <input type="number" th:field="*{nipNumber}" oninput="validateNipNumber(this)" required maxlength="10"
+                       placeholder="Enter the NIP with exactly 10 digits"/>
             </div>
             <div>
                 <label>Email:</label>
-                <input type="email" th:field="*{email}" required maxlength="30"
-                       title="Enter a valid email address (up to 30 characters)"/>
+                <input type="email" th:field="*{email}" oninput="validateEmail(this)" required maxlength="30"
+                       placeholder="Enter a valid email address (up to 30 characters)"/>
             </div>
             <div>
                 <label>Phone:</label>
-                <input type="tel" th:field="*{phoneNumber}" required title="Enter a valid phone number"/>
+                <input type="tel" th:field="*{phoneNumber}" oninput="validatePhoneNumber(this)" required
+                       placeholder="Enter a valid phone number"/>
             </div>
-            <button type="submit" class="button">
+            <button type="button" class="button" onclick="validateOperatorForm()">
                 <i class="fas fa-sync"></i> Update
             </button>
         </div>
     </form>
 </div>
 </body>
+
 </html>

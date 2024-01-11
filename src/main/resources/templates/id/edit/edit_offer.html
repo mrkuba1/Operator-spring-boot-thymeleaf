@@ -6,31 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/add.css}"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/validation/offerform.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/form/offer.css}"/>
 </head>
 <body>
 <div>
     <div class="form-title" th:if="${offer.offerId==null}">Create new service</div>
     <div class="form-title" th:unless="${offer.offerId==null}">Edit service</div>
-    <form th:action="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/offer/update'}" th:object="${offer}" method="post">
+    <form th:action="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/offer/update'}" th:object="${offer}"
+          method="post" id="offerForm">
         <input type="hidden" th:field="*{offerId}" th:value="${offer.offerId}">
         <div>
             <div>
                 <label>Name:</label>
-                <input type="text" th:field="*{name}" required maxlength="30"
-                       title="Enter the employee's name (up to 30 characters)"/>
+                <input type="text" th:field="*{name}" oninput="validateOfferName(this)" maxlength="30"
+                       placeholder="Enter the offer's name (up to 30 characters)"/>
             </div>
-            <div class="gender-switch">
+            <div class="gender-switch" onchange="validateOfferType()">
                 <div class="radio-group">
                     <label class="radio-label">TV</label>
                     <label>
-                        <input type="radio" th:field="*{type}" value="TV" required />
+                        <input type="radio" th:field="*{type}" value="TV" required/>
                         <span class="radio-checkmark"></span>
                     </label>
                     <label class="radio-label">Phone subscription</label>
                     <label>
-                        <input type="radio" th:field="*{type}" value="abonament telefoniczny" required />
+                        <input type="radio" th:field="*{type}" value="abonament telefoniczny" required/>
                         <span class="radio-checkmark"></span>
                     </label>
                     <label class="radio-label">Mobile internet</label>
@@ -48,21 +50,21 @@
             <div>
                 <label>Date of start</label>
                 <label>
-                    <input type="date" th:field="*{dateOfStart}" required/>
+                    <input type="date" th:field="*{dateOfStart}" oninput="validateOfferDateOfStart(this)" required/>
                 </label>
             </div>
             <div>
                 <label>Date of end</label>
                 <label>
-                    <input type="date" th:field="*{dateOfEnd}" required/>
+                    <input type="date" th:field="*{dateOfEnd}" oninput="validateOfferDateOfEnd(this)" required/>
                 </label>
             </div>
-            <div class="gender-switch">
+            <div class="gender-switch" onchange="validateOfferDevice()">
                 <label>Device:</label>
                 <div class="radio-group">
                     <label class="radio-label">Yes</label>
                     <label>
-                        <input type="radio" th:field="*{device}" value="T" required />
+                        <input type="radio" th:field="*{device}" value="T" required/>
                         <span class="radio-checkmark"></span>
                     </label>
                     <label class="radio-label">No</label>
@@ -74,20 +76,12 @@
             </div>
             <div>
                 <label>Value:</label>
-                <input type="text" th:field="*{value}" required pattern="^(?!0\d)(\d{1,8}(\.\d{1,2})?)?$"
-                       title="Enter a valid positive number with up to 8 digits and 2 decimal places"/>
+                <input type="number" th:field="*{value}" required pattern="^(?!0\d)(\d{1,8}(\.\d{1,2})?)?$"
+                       onclick="validateOfferValue(this)"
+                       placeholder="Enter a valid positive number with up to 8 digits and 2 decimal places"/>
             </div>
             <input type="hidden" th:field="*{customer}" th:value="${offer.customer}">
-<!--            <div th:if="${role=='ADMIN'}">-->
-<!--                <label>Customer:-->
-<!--                    <select th:field="*{customer}" class="form-control" required>-->
-<!--                        <th:block th:each="customer:${customers}">-->
-<!--                            <option th:text="${customer.toString()}" th:value="${customer.customerId}"/>-->
-<!--                        </th:block>-->
-<!--                    </select>-->
-<!--                </label>-->
-<!--            </div>-->
-            <button type="submit" class="button">
+            <button type="button" class="button" onclick="validateOfferForm()">
                 <i class="fas fa-sync"></i> Update
             </button>
         </div>

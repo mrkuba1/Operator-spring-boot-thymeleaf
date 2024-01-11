@@ -6,31 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/add.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/form/employee.css}"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/validation/employeeform.js}"></script>
 </head>
 <body>
 <div>
     <div class="form-title" th:if="${employee.employeeId==null}">Create new employee</div>
     <div class="form-title" th:unless="${employee.employeeId==null}">Edit employee</div>
-    <form th:action="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/employee/save'}" th:object="${employee}" method="post">
+    <form th:action="@{'/'+${role}+'/operators/'+${operator.operatorId}+'/employee/save'}" th:object="${employee}"
+          method="post" id="employeeForm">
         <input type="hidden" th:field="*{employeeId}" th:value="${employee.employeeId}">
         <div>
             <div>
                 <label>Name:</label>
-                <input type="text" th:field="*{name}" required maxlength="20"
-                       title="Enter the employee's name (up to 20 characters)"/>
+                <input type="text" th:field="*{name}" oninput="validateEmployeeName(this)" maxlength="20"
+                       placeholder="Enter the employee's name (up to 20 characters)"/>
             </div>
             <div>
                 <label>Surname:</label>
-                <input type="text" th:field="*{surname}" required maxlength="30"
-                       title="Enter the employee's surname (up to 30 characters)"/>
+                <input type="text" th:field="*{surname}" oninput="validateEmployeeSurname(this)" required maxlength="30"
+                       placeholder="Enter the employee's surname (up to 30 characters)"/>
             </div>
             <div class="gender-switch">
                 <div class="radio-group">
                     <label class="radio-label">Female</label>
                     <label>
-                        <input type="radio" th:field="*{gender}" value="K" required />
+                        <input type="radio" th:field="*{gender}" value="K" required/>
                         <span class="radio-checkmark"></span>
                     </label>
                     <label class="radio-label">Male</label>
@@ -40,34 +42,36 @@
                     </label>
                 </div>
             </div>
-
             <div>
                 <label>PESEL:</label>
-                <input type="number" th:field="*{peselNumber}" required pattern=".{11}" maxlength="11"
-                       title="Enter the NIP with exactly 10 digits"/>
+                <input type="number" th:field="*{peselNumber}" oninput="validateEmployeePESEL(this)" required
+                       pattern=".{11}" min="0" maxlength="11"
+                       placeholder="Enter the PESEL with exactly 11 digits"/>
             </div>
             <div>
                 <label>Date of employment</label>
                 <label>
-                    <input type="date" th:field="*{dateOfEmployment}" required/>
+                    <input type="date" th:field="*{dateOfEmployment}" oninput="validateDateOfEmployment(this)"
+                           required/>
                 </label>
             </div>
             <div>
                 <label>Date of dismissal</label>
                 <label>
-                    <input type="date" th:field="*{dateOfDismissal}"/>
+                    <input type="date" th:field="*{dateOfDismissal}" oninput="validateDateOfDismissal(this)"/>
                 </label>
             </div>
             <div>
                 <label>Department:
                     <select th:field="*{department}" class="form-control" required>
                         <th:block th:each="department:${departments}">
-                            <option th:text="${department.getNameAndOperatorName()}" th:value="${department.departmentId}"/>
+                            <option th:text="${department.getNameAndOperatorName()}"
+                                    th:value="${department.departmentId}"/>
                         </th:block>
                     </select>
                 </label>
             </div>
-            <button type="submit" class="button">
+            <button type="button" class="button" onclick="validateEmployeeForm()">
                 <i class="fas fa-save"></i> Save
             </button>
         </div>

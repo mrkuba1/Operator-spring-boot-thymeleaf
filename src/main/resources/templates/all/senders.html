@@ -49,6 +49,7 @@
         <thead class="thead-dark">
         <tr> <!-- Table row -->
             <th>ID</th>
+            <th>Location</th>
             <th>Height</th>
             <th>Bandwidth</th>
             <th>Works</th>
@@ -60,6 +61,7 @@
         <tbody>
         <tr th:each="sender : ${senders}">
             <td th:text="${sender.senderId}">ID</td>
+            <td th:text="${sender.location}">ID</td>
             <td th:text="${sender.height}">Height</td>
             <td th:text="${sender.bandwidth}">Bandwidth</td>
             <td th:text="${sender.works == 'T' ? 'Yes' : 'No'}">Works</td>

@@ -6,23 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/add.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/form/department.css}"/>
+    <script type="text/javascript" th:src="@{/js/validation/departmentform.js}"></script>
 </head>
 <body>
 <div>
     <div class="form-title" th:if="${department.departmentId==null}">Create new department</div>
     <div class="form-title" th:unless="${department.departmentId==null}">Edit department</div>
-    <form th:action="@{'/'+${role}+'/department/update'}" th:object="${department}" method="post">
+    <form th:action="@{'/'+${role}+'/department/update'}" th:object="${department}" method="post" id="departmentForm">
         <input type="hidden" th:field="*{departmentId}" th:value="${department.departmentId}">
         <div>
             <div>
                 <label>Name:</label>
-                <input type="text" th:field="*{name}" required maxlength="20"
-                       title="Enter the department's name (up to 20 characters)"/>
+                <input type="text" th:field="*{name}" oninput="validateDepartmentName(this)" required maxlength="20"
+                       placeholder="Enter the department's name (up to 20 characters)"/>
             </div>
             <div>
                 <label>Phone:</label>
-                <input type="tel" th:field="*{phoneNumber}" required title="Enter a valid phone number"/>
+                <input type="tel" th:field="*{phoneNumber}" oninput="validateDepartmentPhoneNumber(this)" required
+                       placeholder="Enter a valid phone number"/>
             </div>
             <div>
                 <label>Operator:
@@ -33,7 +35,7 @@
                     </select>
                 </label>
             </div>
-            <button type="submit" class="button">
+            <button type="button" class="button" onclick="validateDepartmentForm()">
                 <i class="fas fa-sync"></i> Update
             </button>
         </div>
