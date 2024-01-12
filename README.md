@@ -1,6 +1,7 @@
 # Operator-spring-boot-thymeleaf
-======================================
+
 Operator Spring Boot Thymeleaf - CRUD application with Maven, Bootstrap, Spring Data JPA, Web MVC.
+Project was created for course Theory of Database and  Big Data.
 
 Used:
 -------------
