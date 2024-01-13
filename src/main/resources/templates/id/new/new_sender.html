@@ -25,12 +25,16 @@
             </div>
             <div>
                 <label>Height:</label>
-                <input type="number" step="0.001" th:field="*{height}" class="form-control" required min="0"
+                <input type="number" step="0.01" th:field="*{height}" class="form-control" required min="0"
+                       pattern="^(?!0\d)(\d{1,8}(\.\d{1,2})?)?$"
+                       placeholder="Enter a valid positive number with up to 8 digits and 2 decimal places"
                        oninput="validateSenderHeight(this)"/>
             </div>
             <div>
                 <label>Bandwidth:</label>
-                <input type="number" step="0.001" th:field="*{bandwidth}" class="form-control" required min="0"
+                <input type="number" step="0.01" th:field="*{bandwidth}" class="form-control" required
+                       pattern="^(?!0\d)(\d{1,8}(\.\d{1,2})?)?$" min="0"
+                       placeholder="Enter a valid positive number with up to 8 digits and 2 decimal places"
                        oninput="validateSenderBandwidth(this)"/>
             </div>
             <div class="gender-switch">

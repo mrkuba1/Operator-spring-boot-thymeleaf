@@ -74,6 +74,8 @@ function validateOfferValue(inputElement) {
     var value = inputElement.value.trim();
     if (value === '' || !/^[+]?\d+(\.\d{1,2})?$|^[+]?\d+$/.test(value)) {
         inputElement.style.borderColor = 'red';
+    } else if (parseFloat(value) > 9999999.99 || parseFloat(value) < -9999999.99) {
+        inputElement.style.borderColor = 'red';
     } else {
         inputElement.style.borderColor = 'green';
     }
@@ -95,9 +97,13 @@ function validateOfferForm() {
     } else if (name.length > 30) {
         alert('Name exceeds 30 characters');
     } else if (!isValidDate(dateOfStart)) {
-        alert('Invalid date of employment or date in the future');
+        alert('Invalid date of start or date in the future');
     } else if (!/^[+]?\d+(\.\d{1,2})?$/.test(value)) {
         alert('Please enter a valid number with up to two decimal places.');
+    } else if (dateOfStart > dateOfEnd) {
+        alert('Invalid date of end or date in the future');
+    } else if (parseFloat(value) > 9999999.99 || parseFloat(value) < -9999999.99) {
+        alert('Please enter a number within the range of -9999999.99 to 9999999.99.');
     } else {
         document.getElementById('offerForm').submit();
     }

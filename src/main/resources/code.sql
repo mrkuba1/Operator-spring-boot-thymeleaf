@@ -1,6 +1,6 @@
 /*
-Created: 12/5/2023
-Modified: 12/11/2023
+Created: 05/12/2023
+Modified: 02/01/2024
 Project: Operator Telekomunikacyjny
 Model: OperatorTelekomunikacyjny (1.0) (1.0)
 Company: Essunia Inc.
@@ -11,72 +11,47 @@ Database: Oracle 19c
 
 -- Create sequences section -------------------------------------------------
 
-CREATE SEQUENCE Operator_telekomunikacyjnyS
-    INCREMENT BY 1
-    START WITH 1
+CREATE SEQUENCE Operatorzy_telekomunikacyjniS
     NOMAXVALUE
  NOMINVALUE
  CACHE 20
 /
-
 
 CREATE SEQUENCE NadajnikiS
-    INCREMENT BY 1
-    START WITH 1
-    NOMAXVALUE
- NOMINVALUE
- CACHE 20
-/
-
-CREATE SEQUENCE UslugiS
-    INCREMENT BY 1
-    START WITH 1
-    NOMAXVALUE
- NOMINVALUE
- CACHE 20
-/
-
-CREATE SEQUENCE PracownicyS
-    INCREMENT BY 1
-    START WITH 1
-    NOMAXVALUE
- NOMINVALUE
- CACHE 20
-/
-
-CREATE SEQUENCE KlienciS
-    INCREMENT BY 1
-    START WITH 1
     NOMAXVALUE
  NOMINVALUE
  CACHE 20
 /
 
 CREATE SEQUENCE OddzialyS
-    INCREMENT BY 1
-    START WITH 1
+    NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+/
+
+CREATE SEQUENCE KlienciS
+    NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+/
+
+CREATE SEQUENCE PracownicyS
+    NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+/
+
+CREATE SEQUENCE UslugiS
     NOMAXVALUE
  NOMINVALUE
  CACHE 20
 /
 
 CREATE SEQUENCE WynagrodzeniaS
-    INCREMENT BY 1
-    START WITH 1
     NOMAXVALUE
  NOMINVALUE
  CACHE 20
 /
-
-CREATE SEQUENCE UzytkownicyS
-    INCREMENT BY 1
-    START WITH 1
-    NOMAXVALUE
- NOMINVALUE
- CACHE 20
-/
-
-
 
 -- Create tables section -------------------------------------------------
 
@@ -85,17 +60,17 @@ CREATE SEQUENCE UzytkownicyS
 CREATE TABLE Operatorzy_telekomunikacyjni(
                                              ID_operatora Integer NOT NULL,
                                              Nazwa Varchar2(30 ) NOT NULL,
-                                             NIP Varchar2(10 ) NOT NULL,
+                                             NIP Char(10 ) NOT NULL,
                                              Email Varchar2(30 ) NOT NULL,
                                              Numer_telefonu Varchar2(15 ) NOT NULL
 )
     /
 
-
 -- Add keys for table Operatorzy_telekomunikacyjni
 
 ALTER TABLE Operatorzy_telekomunikacyjni ADD CONSTRAINT Unique_Identifier1 PRIMARY KEY (ID_operatora)
     /
+
 
 -- Table and Columns comments section
 
@@ -111,24 +86,6 @@ COMMENT ON COLUMN Operatorzy_telekomunikacyjni.Email IS 'Adres email operatora t
 COMMENT ON COLUMN Operatorzy_telekomunikacyjni.Numer_telefonu IS 'Numer telefonu operatora telekomunikacyjnego'
 /
 
-
--- Create tables section -------------------------------------------------
-
--- Table Uzytkownicy
-
-CREATE TABLE Uzytkownicy(
-                            ID_uzytkownika Integer NOT NULL,
-                            Nick Varchar2(30 ) NOT NULL,
-                            Haslo Varchar2(30 ) NOT NULL,
-                            Rola Varchar2(30 ) NOT NULL
-)
-    /
-
--- Add keys for table Operatorzy_telekomunikacyjni
-
-ALTER TABLE Uzytkownicy ADD CONSTRAINT Unique_Identifier111 PRIMARY KEY (ID_uzytkownika)
-    /
-
 -- Table Oddzialy
 
 CREATE TABLE Oddzialy(
@@ -143,7 +100,6 @@ CREATE TABLE Oddzialy(
 
 CREATE INDEX IX_Ma ON Oddzialy (ID_operatora)
     /
-
 
 -- Add keys for table Oddzialy
 
@@ -165,19 +121,23 @@ CREATE TABLE Uslugi(
                        ID_uslugi Integer NOT NULL,
                        Nazwa Varchar2(30 ) NOT NULL,
                        Typ_uslugi Varchar2(40 ) NOT NULL
-                           CONSTRAINT UslugiCR CHECK (Typ_uslugi IN ('abonament telefoniczny','internet mobilny','internet swiatlowodowy','TV')),
+                           CONSTRAINT UslugiC CHECK (Typ_Uslugi IN ('abonament telefoniczny','internet mobilny','internet swiatlowodowy','TV')),
                        Data_zawarcia_umowy Date NOT NULL,
                        Data_zakonczenia_umowy Date NOT NULL,
                        Czy_urzadzenie Char(1 ) NOT NULL
-                           CONSTRAINT SprawnoscCR CHECK (Czy_urzadzenie IN ('T','N')),
+                           CONSTRAINT Czy_urzadzenieC CHECK (Czy_urzadzenie IN ('T','N')),
                        Wartosc Number(10,2) NOT NULL,
-                       ID_operatora Integer NOT NULL
+                       ID_operatora Integer NOT NULL,
+                       ID_klienta Integer NOT NULL
 )
     /
 
 -- Create indexes for table Uslugi
 
 CREATE INDEX IX_Oferuje ON Uslugi (ID_operatora)
+    /
+
+CREATE INDEX IX_Klient_posiada ON Uslugi (ID_klienta)
     /
 
 -- Add keys for table Uslugi
@@ -206,7 +166,7 @@ COMMENT ON COLUMN Uslugi.Wartosc IS 'Wartosc uslugi'
 
 CREATE TABLE Klienci(
                         ID_klienta Integer NOT NULL,
-                        Imie Varchar2(20 ) NOT NULL,
+                        Imie Varchar2(30 ) NOT NULL,
                         Nazwisko Varchar2(30 ) NOT NULL,
                         Numer_telefonu Varchar2(15 ) NOT NULL,
                         ID_operatora Integer NOT NULL
@@ -218,7 +178,6 @@ CREATE TABLE Klienci(
 CREATE INDEX IX_Obsluguje ON Klienci (ID_operatora)
     /
 
-
 -- Add keys for table Klienci
 
 ALTER TABLE Klienci ADD CONSTRAINT Unique_Identifier8 PRIMARY KEY (ID_klienta)
@@ -228,29 +187,29 @@ ALTER TABLE Klienci ADD CONSTRAINT Unique_Identifier8 PRIMARY KEY (ID_klienta)
 
 COMMENT ON COLUMN Klienci.ID_klienta IS 'Unikatowy identyfikator klienta'
 /
-COMMENT ON COLUMN Klienci.Numer_telefonu IS 'Imie klienta'
-/
-COMMENT ON COLUMN Klienci.Numer_telefonu IS 'Nazwisko klienta'
-/
 COMMENT ON COLUMN Klienci.Numer_telefonu IS 'Numer telefonu klienta'
 /
-
 
 -- Table Nadajniki
 
 CREATE TABLE Nadajniki(
-                          ID_nadajnika INTEGER DEFAULT NadajnikiS.NEXTVAL NOT NULL,
-                          Wysokosc Float(1) NOT NULL,
-                          Pasmo Float(2) NOT NULL,
+                          ID_nadajnika Integer NOT NULL,
+                          Lokalizacja Varchar2(30 ) NOT NULL,
+                          Wysokosc Number(8,2) NOT NULL,
+                          Pasmo Number(8,2) NOT NULL,
                           Czy_sprawny Char(1 ) NOT NULL
-                              CONSTRAINT SprawdzenieCR CHECK (Czy_sprawny IN ('T','N')),
-                          ID_operatora Integer NOT NULL
+                              CONSTRAINT Czy_sprawnyC CHECK (Czy_sprawny IN ('T','N')),
+                          ID_operatora Integer NOT NULL,
+                          ID_pracownika Integer
 )
     /
 
 -- Create indexes for table Nadajniki
 
 CREATE INDEX IX_Posiada ON Nadajniki (ID_operatora)
+    /
+
+CREATE INDEX IX_Obsluga ON Nadajniki (ID_pracownika)
     /
 
 -- Add keys for table Nadajniki
@@ -274,11 +233,12 @@ CREATE TABLE Pracownicy(
                            Imie Varchar2(20 ) NOT NULL,
                            Nazwisko Varchar2(30 ) NOT NULL,
                            Plec Char(1 ) NOT NULL
-                               CONSTRAINT PlecCR CHECK (PLEC IN ('K','M')),
+                               CONSTRAINT PlecC CHECK (PLEC IN ('K','M')),
                            PESEL Char(11 ) NOT NULL,
                            Data_zatrudnienia Date NOT NULL,
                            Data_zwolnienia Date,
-                           ID_operatora Integer NOT NULL
+                           ID_operatora Integer NOT NULL,
+                           ID_oddzialu Integer NOT NULL
 )
     /
 
@@ -287,6 +247,8 @@ CREATE TABLE Pracownicy(
 CREATE INDEX IX_Zatrudnia ON Pracownicy (ID_operatora)
     /
 
+CREATE INDEX IX_Przydzial_pracownikow ON Pracownicy (ID_oddzialu)
+    /
 
 -- Add keys for table Pracownicy
 
@@ -309,39 +271,6 @@ COMMENT ON COLUMN Pracownicy.Data_zatrudnienia IS 'Data zatrudnienia pracownika'
 /
 COMMENT ON COLUMN Pracownicy.Data_zwolnienia IS 'Data zwolnienia pracownika'
 /
-
--- Table Udostepnianie_uslug
-
-CREATE TABLE Udostepnianie_uslug(
-                                    ID_oddzialu Integer NOT NULL,
-                                    ID_uslugi Integer NOT NULL
-)
-    /
-
--- Table Umowy
-
-CREATE TABLE Umowy(
-                      ID_uslugi Integer NOT NULL,
-                      ID_klienta Integer NOT NULL
-)
-    /
-
--- Table Zatrudnienie_pracownikow
-
-CREATE TABLE Zatrudnienie_pracownikow(
-                                         ID_pracownika Integer NOT NULL,
-                                         ID_oddzialu Integer NOT NULL
-)
-    /
-
--- Table Obsluga
-
-CREATE TABLE Obsluga(
-                        ID_nadajnika Integer NOT NULL,
-                        ID_pracownika Integer NOT NULL
-)
-    /
-
 
 -- Table Wynagrodzenia
 
@@ -375,15 +304,15 @@ COMMENT ON COLUMN Wynagrodzenia.Pensja_podstawowa IS 'Pensja podstawowa'
 COMMENT ON COLUMN Wynagrodzenia.Premia IS 'Premia wynagrodzenia'
 /
 
--- Trigger for sequence Operator_telekomunikacyjnyS for column ID_operatora in table Operatorzy_telekomunikacyjni ---------
-CREATE OR REPLACE TRIGGER ts_Operatorzy_telekomunikacyjni_Operator_telekomunikacyjnyS BEFORE INSERT
+-- Trigger for sequence Operatorzy_telekomunikacyjniS for column ID_operatora in table Operatorzy_telekomunikacyjni ---------
+CREATE OR REPLACE TRIGGER ts_Operatorzy_telekomunikacyjni_Operatorzy_telekomunikacyjniS BEFORE INSERT
 ON Operatorzy_telekomunikacyjni FOR EACH ROW
 BEGIN
-  :new.ID_operatora := Operator_telekomunikacyjnyS.nextval;
+  :new.ID_operatora := Operatorzy_telekomunikacyjniS.nextval;
 END;
 /
-CREATE OR REPLACE TRIGGER tsu_Operatorzy_telekomunikacyjni_Operator_telekomunikacyjnyS AFTER UPDATE OF ID_operatora
-                                                                                             ON Operatorzy_telekomunikacyjni FOR EACH ROW
+CREATE OR REPLACE TRIGGER tsu_Operatorzy_telekomunikacyjni_Operatorzy_telekomunikacyjniS AFTER UPDATE OF ID_operatora
+                                                                                               ON Operatorzy_telekomunikacyjni FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column ID_operatora in table Operatorzy_telekomunikacyjni as it uses sequence.');
 END;
@@ -400,20 +329,6 @@ CREATE OR REPLACE TRIGGER tsu_Oddzialy_OddzialyS AFTER UPDATE OF ID_oddzialu
                                                        ON Oddzialy FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column ID_oddzialu in table Oddzialy as it uses sequence.');
-END;
-/
-
--- Trigger for sequence UzytkownicyS for column ID_uzytkownika in table Uzytkownicy ---------
-CREATE OR REPLACE TRIGGER ts_Uzytkownicy_UzytkownicyS BEFORE INSERT
-ON Uzytkownicy FOR EACH ROW
-BEGIN
-  :new.ID_uzytkownika := UzytkownicyS.nextval;
-END;
-/
-CREATE OR REPLACE TRIGGER tsu_Uzytkownicy_UzytkownictS AFTER UPDATE OF ID_uzytkownika
-                                                             ON Uzytkownicy FOR EACH ROW
-BEGIN
-  RAISE_APPLICATION_ERROR(-20010,'Cannot update column ID_uzytkownika in table Uzytkownicy as it uses sequence.');
 END;
 /
 
@@ -473,9 +388,6 @@ BEGIN
 END;
 /
 
-
-
-
 -- Trigger for sequence WynagrodzeniaS for column ID_wynagrodzenia in table Wynagrodzenia ---------
 CREATE OR REPLACE TRIGGER ts_Wynagrodzenia_WynagrodzeniaS BEFORE INSERT
 ON Wynagrodzenia FOR EACH ROW
@@ -517,7 +429,23 @@ ALTER TABLE Klienci ADD CONSTRAINT Operator_Obsluguje FOREIGN KEY (ID_operatora)
     /
 
 
+
 ALTER TABLE Wynagrodzenia ADD CONSTRAINT Pracownik_ma_wynagordzenie FOREIGN KEY (ID_pracownika) REFERENCES Pracownicy (ID_pracownika)
+    /
+
+
+
+ALTER TABLE Nadajniki ADD CONSTRAINT Obsluga FOREIGN KEY (ID_pracownika) REFERENCES Pracownicy (ID_pracownika)
+    /
+
+
+
+ALTER TABLE Uslugi ADD CONSTRAINT Klient_posiada FOREIGN KEY (ID_klienta) REFERENCES Klienci (ID_klienta)
+    /
+
+
+
+ALTER TABLE Pracownicy ADD CONSTRAINT Przydzial_pracownikow FOREIGN KEY (ID_oddzialu) REFERENCES Oddzialy (ID_oddzialu)
     /
 
 

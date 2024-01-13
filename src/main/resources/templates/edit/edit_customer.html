@@ -31,14 +31,14 @@
                 <input type="tel" th:field="*{phoneNumber}" oninput="validateCustomerPhoneNumber(this)" required
                        placeholder="Enter a valid phone number"/>
             </div>
-            <div>
-                <label>
-                    <select th:field="*{operator}" class="form-control" required>
-                        <option th:each="operator : ${operators}" th:value="${operator.operatorId}"
-                                th:text="${operator.name}"></option>
-                    </select>
-                </label>
-            </div>
+<!--            <div>-->
+<!--                <label>-->
+<!--                    <select th:field="*{operator}" class="form-control" required>-->
+<!--                        <option th:each="operator : ${operators}" th:value="${operator.operatorId}"-->
+<!--                                th:text="${operator.name}"></option>-->
+<!--                    </select>-->
+<!--                </label>-->
+<!--            </div>-->
             <button type="button" class="button" onclick="validateCustomerForm()">
                 <i class="fas fa-sync"></i> Update
             </button>

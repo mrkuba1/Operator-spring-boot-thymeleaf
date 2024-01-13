@@ -110,12 +110,16 @@ public class CustomerController {
 	
 	@PostMapping("/{role}/operators/{id}/customer/save")
 	public String saveCustomerId(@PathVariable("id") Long id, Customer customer,@PathVariable("role") String role) {
+		Operator operator=operatorService.findById(id);
+		customer.setOperator(operator);
 		customerService.saveCustomer(customer);
 		return "redirect:/{role}/operators/{id}/customers";
 	}
 	
 	@PostMapping("/{role}/operators/{operatorId}/customer/update")
 	public String updateCustomerId(@ModelAttribute("customer") Customer customer, @PathVariable("operatorId") Long operatorId,@PathVariable("role") String role) {
+		Operator operator=operatorService.findById(operatorId);
+		customer.setOperator(operator);
 		customerService.saveCustomer(customer);
 		return "redirect:/{role}/operators/{operatorId}/customers";
 	}

@@ -22,7 +22,7 @@ public class Operator {
 	private String name;
 	@Column(name = "NIP", nullable = false)
 	private String nipNumber;
-	@Column(name = "EMIAL", nullable = false)
+	@Column(name = "EMAIL", nullable = false)
 	private String email;
 	@Column(name = "NUMER_TELEFONU", nullable = false)
 	private String phoneNumber;

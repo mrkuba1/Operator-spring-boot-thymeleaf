@@ -99,6 +99,8 @@ function validateEmployeeForm() {
         alert('PESEL must have exactly 11 digits');
     } else if (!isValidDate(dateOfEmployment)) {
         alert('Invalid date of employment or date in the future');
+    } else if (dateOfDismissal < dateOfEmployment && dateOfDismissal.trim() !== '') {
+        alert('Invalid date of dismissal');
     } else if (dateOfDismissal.trim() !== '' && !isValidDate(dateOfDismissal)) {
         alert('Invalid date of dismissal');
     } else {
