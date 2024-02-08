@@ -1,14 +1,9 @@
 /*
 Created: 05/12/2023
-Modified: 02/01/2024
-Project: Operator Telekomunikacyjny
-Model: OperatorTelekomunikacyjny (1.0) (1.0)
-Company: Essunia Inc.
-Author: Jakub Sierocki, Maciej Nadolski
+Project: Operator Telekomunikacyjny for BDBT's course
+Author: Jakub Sierocki
 Database: Oracle 19c
 */
-
-
 -- Create sequences section -------------------------------------------------
 
 CREATE SEQUENCE Operatorzy_telekomunikacyjniS
@@ -80,8 +75,7 @@ COMMENT ON COLUMN Operatorzy_telekomunikacyjni.Nazwa IS 'Nazwa operatora telekom
 /
 COMMENT ON COLUMN Operatorzy_telekomunikacyjni.NIP IS 'Numer NIP operatora telekomunikacyjnego'
 /
-COMMENT ON COLUMN Operatorzy_telekomunikacyjni.Email IS 'Adres email operatora telekomunikacyjnego
-'
+COMMENT ON COLUMN Operatorzy_telekomunikacyjni.Email IS 'Adres email operatora telekomunikacyjnego'
 /
 COMMENT ON COLUMN Operatorzy_telekomunikacyjni.Numer_telefonu IS 'Numer telefonu operatora telekomunikacyjnego'
 /
@@ -97,17 +91,14 @@ CREATE TABLE Oddzialy(
     /
 
 -- Create indexes for table Oddzialy
-
 CREATE INDEX IX_Ma ON Oddzialy (ID_operatora)
     /
 
 -- Add keys for table Oddzialy
-
 ALTER TABLE Oddzialy ADD CONSTRAINT Unique_Identifier6 PRIMARY KEY (ID_oddzialu)
     /
 
 -- Table and Columns comments section
-
 COMMENT ON COLUMN Oddzialy.ID_oddzialu IS 'Unikatowy identyfikator oddzialu'
 /
 COMMENT ON COLUMN Oddzialy.Nazwa IS 'Nazwa oddzialu'
@@ -116,7 +107,6 @@ COMMENT ON COLUMN Oddzialy.Numer_telefonu IS 'Numer telefonu oddzialu'
 /
 
 -- Table Uslugi
-
 CREATE TABLE Uslugi(
                        ID_uslugi Integer NOT NULL,
                        Nazwa Varchar2(30 ) NOT NULL,
@@ -133,7 +123,6 @@ CREATE TABLE Uslugi(
     /
 
 -- Create indexes for table Uslugi
-
 CREATE INDEX IX_Oferuje ON Uslugi (ID_operatora)
     /
 
@@ -141,7 +130,6 @@ CREATE INDEX IX_Klient_posiada ON Uslugi (ID_klienta)
     /
 
 -- Add keys for table Uslugi
-
 ALTER TABLE Uslugi ADD CONSTRAINT Unique_Identifier7 PRIMARY KEY (ID_uslugi)
     /
 
@@ -163,7 +151,6 @@ COMMENT ON COLUMN Uslugi.Wartosc IS 'Wartosc uslugi'
 /
 
 -- Table Klienci
-
 CREATE TABLE Klienci(
                         ID_klienta Integer NOT NULL,
                         Imie Varchar2(30 ) NOT NULL,
@@ -174,7 +161,6 @@ CREATE TABLE Klienci(
     /
 
 -- Create indexes for table Klienci
-
 CREATE INDEX IX_Obsluguje ON Klienci (ID_operatora)
     /
 
@@ -184,14 +170,12 @@ ALTER TABLE Klienci ADD CONSTRAINT Unique_Identifier8 PRIMARY KEY (ID_klienta)
     /
 
 -- Table and Columns comments section
-
 COMMENT ON COLUMN Klienci.ID_klienta IS 'Unikatowy identyfikator klienta'
 /
 COMMENT ON COLUMN Klienci.Numer_telefonu IS 'Numer telefonu klienta'
 /
 
 -- Table Nadajniki
-
 CREATE TABLE Nadajniki(
                           ID_nadajnika Integer NOT NULL,
                           Lokalizacja Varchar2(30 ) NOT NULL,
@@ -205,7 +189,6 @@ CREATE TABLE Nadajniki(
     /
 
 -- Create indexes for table Nadajniki
-
 CREATE INDEX IX_Posiada ON Nadajniki (ID_operatora)
     /
 
@@ -213,12 +196,10 @@ CREATE INDEX IX_Obsluga ON Nadajniki (ID_pracownika)
     /
 
 -- Add keys for table Nadajniki
-
 ALTER TABLE Nadajniki ADD CONSTRAINT Unique_Identifier11 PRIMARY KEY (ID_nadajnika)
     /
 
 -- Table and Columns comments section
-
 COMMENT ON COLUMN Nadajniki.Wysokosc IS 'Wysokosc nadajnika n.p.m.'
 /
 COMMENT ON COLUMN Nadajniki.Pasmo IS 'Pasmo nadajnika'
@@ -227,7 +208,6 @@ COMMENT ON COLUMN Nadajniki.Czy_sprawny IS 'Flaga kontrola czy jest sprawny (T,N
 /
 
 -- Table Pracownicy
-
 CREATE TABLE Pracownicy(
                            ID_pracownika Integer NOT NULL,
                            Imie Varchar2(20 ) NOT NULL,
@@ -243,7 +223,6 @@ CREATE TABLE Pracownicy(
     /
 
 -- Create indexes for table Pracownicy
-
 CREATE INDEX IX_Zatrudnia ON Pracownicy (ID_operatora)
     /
 
@@ -251,12 +230,10 @@ CREATE INDEX IX_Przydzial_pracownikow ON Pracownicy (ID_oddzialu)
     /
 
 -- Add keys for table Pracownicy
-
 ALTER TABLE Pracownicy ADD CONSTRAINT Unique_Identifier12 PRIMARY KEY (ID_pracownika)
     /
 
 -- Table and Columns comments section
-
 COMMENT ON COLUMN Pracownicy.ID_pracownika IS 'Unikatowy identyfikator pracownika'
 /
 COMMENT ON COLUMN Pracownicy.Imie IS 'Imie pracownika'
@@ -273,7 +250,6 @@ COMMENT ON COLUMN Pracownicy.Data_zwolnienia IS 'Data zwolnienia pracownika'
 /
 
 -- Table Wynagrodzenia
-
 CREATE TABLE Wynagrodzenia(
                               ID_wynagrodzenia Integer NOT NULL,
                               Data_przyznania Date NOT NULL,
@@ -284,17 +260,14 @@ CREATE TABLE Wynagrodzenia(
     /
 
 -- Create indexes for table Wynagrodzenia
-
 CREATE INDEX IX_Relationship18 ON Wynagrodzenia (ID_pracownika)
     /
 
 -- Add keys for table Wynagrodzenia
-
 ALTER TABLE Wynagrodzenia ADD CONSTRAINT PK_Wynagrodzenia PRIMARY KEY (ID_wynagrodzenia)
     /
 
 -- Table and Columns comments section
-
 COMMENT ON COLUMN Wynagrodzenia.ID_wynagrodzenia IS 'Unikatowy identyfikator wynagrodzenia'
 /
 COMMENT ON COLUMN Wynagrodzenia.Data_przyznania IS 'Data przyznania'
@@ -402,53 +375,22 @@ BEGIN
 END;
 /
 
-
 -- Create foreign keys (relationships) section -------------------------------------------------
-
 ALTER TABLE Oddzialy ADD CONSTRAINT Operator_ma FOREIGN KEY (ID_operatora) REFERENCES Operatorzy_telekomunikacyjni (ID_operatora)
     /
-
-
-
 ALTER TABLE Uslugi ADD CONSTRAINT Operator_oferuje FOREIGN KEY (ID_operatora) REFERENCES Operatorzy_telekomunikacyjni (ID_operatora)
     /
-
-
-
 ALTER TABLE Nadajniki ADD CONSTRAINT Operator_posiada FOREIGN KEY (ID_operatora) REFERENCES Operatorzy_telekomunikacyjni (ID_operatora)
     /
-
-
-
 ALTER TABLE Pracownicy ADD CONSTRAINT Operator_zatrudnia FOREIGN KEY (ID_operatora) REFERENCES Operatorzy_telekomunikacyjni (ID_operatora)
     /
-
-
-
 ALTER TABLE Klienci ADD CONSTRAINT Operator_Obsluguje FOREIGN KEY (ID_operatora) REFERENCES Operatorzy_telekomunikacyjni (ID_operatora)
     /
-
-
-
 ALTER TABLE Wynagrodzenia ADD CONSTRAINT Pracownik_ma_wynagordzenie FOREIGN KEY (ID_pracownika) REFERENCES Pracownicy (ID_pracownika)
     /
-
-
-
 ALTER TABLE Nadajniki ADD CONSTRAINT Obsluga FOREIGN KEY (ID_pracownika) REFERENCES Pracownicy (ID_pracownika)
     /
-
-
-
 ALTER TABLE Uslugi ADD CONSTRAINT Klient_posiada FOREIGN KEY (ID_klienta) REFERENCES Klienci (ID_klienta)
     /
-
-
-
 ALTER TABLE Pracownicy ADD CONSTRAINT Przydzial_pracownikow FOREIGN KEY (ID_oddzialu) REFERENCES Oddzialy (ID_oddzialu)
     /
-
-
-
-
-
